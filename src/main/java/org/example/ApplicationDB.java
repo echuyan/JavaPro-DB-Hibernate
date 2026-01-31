@@ -1,38 +1,42 @@
 package org.example;
 
 
-import org.example.config.DbConfig;
-import org.example.datamodel.User;
+import org.example.entity.UserEntity;
+import org.example.repository.EntityRepository;
 import org.example.service.UserService;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
+import java.util.List;
 
-@Configuration
-@ComponentScan
-@EnableTransactionManagement
+@SpringBootApplication
 public class ApplicationDB {
     public static void main(String[] args) {
+        SpringApplication.run(ApplicationDB.class, args);
+    }
 
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DbConfig.class,ApplicationDB.class);
+    @Bean
+    CommandLineRunner app(UserService userService, EntityRepository repository) {
+        return args -> {
+            UserEntity user = userService.createUser("new_user");
+            System.out.println("Created user: " + user);
 
-        UserService userService = context.getBean(UserService.class);
+            List<UserEntity> users = userService.getAllUsers();
+            System.out.println("All users: " + users);
 
+            UserEntity user2 = userService.getUserById(user.getId());
+            System.out.println("Got one user: " + user2);
 
-        userService.createUser(new User(1L, "Elena1"));
-        userService.createUser(new User(2L, "Elena2"));
-        userService.createUser(new User(3L, "Elena3"));
-        userService.createUser(new User(4L, "Elena4"));
-        System.out.println(userService.getAllUsers());
-        System.out.println(userService.getUserById(4L));
-        User testUser = new User(4L,"testUser");
-        userService.updateUser(testUser);
-        System.out.println(userService.getUserById(4L));
-        userService.deleteUser(4L);
-        System.out.println(userService.getAllUsers());
-        context.close();
+            UserEntity updatedUser = userService.updateUser(user.getId(), "new_new_user");
+            System.out.println("Updated user: " + updatedUser);
+
+            userService.deleteUser(user.getId());
+            System.out.println("Deleted user #: " + user.getId());
+
+        };
 
     }
+
 }

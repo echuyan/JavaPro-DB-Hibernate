@@ -1,10 +1,17 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @jakarta.persistence.Entity
 @Table(name = "users")
@@ -16,6 +23,11 @@ public class UserEntity {
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ProductEntity> products = new ArrayList<>();
+
 
     public UserEntity() {
     }
@@ -35,6 +47,10 @@ public class UserEntity {
 
     public String getUsername() {
         return username;
+    }
+
+    public List<ProductEntity> getProducts() {
+        return products;
     }
 
     public void setId(Long id) {

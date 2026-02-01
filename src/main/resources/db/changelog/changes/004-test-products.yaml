@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-test-products
+      author: echuyan
+      changes:
+        - sql:
+            sql: >
+              insert into products(account_number, balance, product_type, user_id)
+              select '0001', 1000.00, 'ACCOUNT', users.id
+              from users
+              where users.username='Elena1'
+              on conflict (account_number) do nothing
+
+        - sql:
+            sql: >
+              insert into products(account_number, balance, product_type, user_id)
+              select '0002', 100.00, 'CARD', users.id
+              from users
+              where users.username='Elena2'
+              on conflict (account_number) do nothing

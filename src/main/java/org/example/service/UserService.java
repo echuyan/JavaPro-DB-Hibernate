@@ -1,48 +1,43 @@
 package org.example.service;
 
-import org.example.dao.UserDao;
-import org.example.datamodel.User;
+import org.example.entity.UserEntity;
+import org.example.repository.EntityRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class UserService {
-    private final UserDao userDao;
+    private final EntityRepository repository;
 
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
+    public UserService(EntityRepository repository) {
+        this.repository = repository;
     }
 
-    public void createUser(User user){
-        int rows = userDao.createUser(user);
-        if (rows != 1){
-            throw new IllegalStateException("Not created " + rows);
+    public UserEntity createUser(String username) {
+        return repository.save(new UserEntity(username));
+    }
+
+    public UserEntity getUserById(long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found, id = " + id));
+    }
+
+    public List<UserEntity> getAllUsers() {
+        return repository.findAll();
+    }
+
+    public UserEntity updateUser(Long id, String username) {
+        UserEntity userEntity = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found, id = " + id));
+        userEntity.setUsername(username);
+        return repository.save(userEntity);
+    }
+
+    public void deleteUser(Long id) {
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("User not found, id = " + id);
         }
-    }
-
-    public User getUserById(long id){
-        return userDao.getUser(id)
-                .orElseThrow(() -> new IllegalArgumentException("User with id=" + id + " not found"));
-    }
-
-    public List<User> getAllUsers(){
-        return userDao.getAllUsers();
-    }
-
-    public void updateUser(User user){
-        int rows = userDao.updateUser(user);
-        if (rows != 1){
-            throw new IllegalStateException("Not updated " + rows);
-        }
-    }
-
-    public void deleteUser(long id){
-        int rows = userDao.deleteUser(id);
-        if (rows != 1){
-            throw new IllegalStateException("Not deleted " + rows);
-        }
+        repository.deleteById(id);
     }
 
 }

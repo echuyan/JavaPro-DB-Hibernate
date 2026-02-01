@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-test-users
+      author: echuyan
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: {name: username, value: "Elena1"}
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: "Elena2" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: "Elena3" }

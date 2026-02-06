@@ -1,0 +1,12 @@
+logging:
+  level:
+    root: TRACE
+
+server:
+  port: 8082
+
+app:
+  mode: payments
+
+products:
+  base-url: http://localhost:8081

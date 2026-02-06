@@ -11,14 +11,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.example.helpers.ProductType;
+import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 
 @jakarta.persistence.Entity
 @Table(name = "products")
+@Profile("products")
 public class ProductEntity {
 
     @Id
@@ -36,7 +37,7 @@ public class ProductEntity {
     private ProductType productType;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private UserEntity user;
 
@@ -89,14 +90,14 @@ public class ProductEntity {
 
     @JsonProperty("userId")
     public Long getUserId() {
-        return user != null ? user.getId() : null ;
+        return user != null ? user.getId() : null;
     }
 
 
     @Override
     public String toString() {
 
-        return "ProductEntity{id="+ id + ", accountNumber=" + accountNumber + ", balance=" + balance + ", productType=" + productType + ", userId=" + getUserId() + '}';
+        return "ProductEntity{id=" + id + ", accountNumber=" + accountNumber + ", balance=" + balance + ", productType=" + productType + ", userId=" + getUserId() + '}';
     }
 
 }

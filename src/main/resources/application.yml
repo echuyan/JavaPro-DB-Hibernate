@@ -1,3 +1,13 @@
+logging:
+  level:
+    root: TRACE
+
+server:
+  port: 8081
+
+app:
+  mode: products
+
 spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
